@@ -5,6 +5,7 @@
 </div>
 
 <script>
+    // Function to fetch AI response
     async function fetchAIResponse(input) {
         const apiKey = 'sk-72a70fe166544bc0a3a551d94808915d'; 
         const apiUrl = 'https://api.deepseek.com/v1/chat/completions';
@@ -19,20 +20,17 @@
                 body: JSON.stringify({ input }),
             });
 
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+
             const data = await response.json();
             return data;
         } catch (error) {
             console.error('Error fetching AI response:', error);
+            return { message: "Error: Unable to fetch response from AI." };
         }
     }
-
-    document.getElementById('sendMessage').addEventListener('click', async () => {
-        const userInput = document.getElementById('userInput').value;
-        const chatMessages = document.getElementById('chatMessages');
-
-        const aiResponse = await fetchAIResponse(userInput);
-        chatMessages.innerHTML += `<div>User: ${userInput}</div>`;
-        chatMessages.innerHTML += `<div>AI: ${aiResponse.message}</div>`;
-    });
 </script>
+
 <script src="deepseek.js" defer></script>
