@@ -1,18 +1,22 @@
-const fetchAIResponse = async (input) => {
-    const apiKey = 'sk-72a70fe166544bc0a3a551d94808915d'; // Replace with your API key securely
-    const apiUrl = 'https://api.deepseek.com/v1/chat/completions'; // Replace with the actual API endpoint
+document.getElementById('sendButton').addEventListener('click', async () => {
+    const userInput = document.getElementById('userInput').value;
+    const messagesDiv = document.getElementById('messages');
 
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ input }),
-    });
+    // Display user message
+    messagesDiv.innerHTML += `<div>User: ${userInput}</div>`;
 
-    const data = await response.json();
-    console.log(data); // Use this data on your page
-};
+    // Fetch AI response
+    const aiResponse = await fetchAIResponse(userInput);
 
-fetchAIResponse("Hello! How may I assist you today");
+    // Display AI response
+    messagesDiv.innerHTML += `<div>AI: ${aiResponse.message}</div>`;
+});
+
+try {
+    const response = await fetchAIResponse(userInput);
+    if (response.error) throw new Error(response.error);
+    // Display the response
+} catch (error) {
+    console.error('Error fetching AI response:', error);
+    messagesDiv.innerHTML += `<div>Error: Unable to fetch response.</div>`;
+}
